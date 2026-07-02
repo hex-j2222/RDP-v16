@@ -41,6 +41,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -903,10 +904,12 @@ private fun AddFab(
         modifier = modifier
             .size(size)
             .graphicsLayer { scaleX = pressScale; scaleY = pressScale }
-            .drawBehind {
+            .drawBehind drawScope@{
                 // Layered static bloom — three soft, fading rings read as a
                 // smooth diffuse halo instead of one hard-edged glow disc.
-                val r = size.minDimension / 2
+                // NOTE: explicit receiver label needed — the enclosing AddFab
+                // `size: Dp` parameter otherwise shadows DrawScope's `size`.
+                val r = this@drawScope.size.minDimension / 2
                 drawCircle(color = accent.copy(alpha = 0.10f), radius = r + 22.dp.toPx())
                 drawCircle(color = accent.copy(alpha = 0.16f), radius = r + 13.dp.toPx())
                 drawCircle(color = accent.copy(alpha = 0.22f), radius = r + 6.dp.toPx())
